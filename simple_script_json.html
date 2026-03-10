@@ -1,0 +1,47 @@
+<html>
+<head>
+    <title>Send JSON to Java Server</title>
+</head>
+<body>
+    <h1>Medals Tally</h1>
+
+    Name: <input id="name" placeholder="Name here."> <br/><br/>
+    Gold: <input id="gold" type="number"> <br/><br/>
+    Silver: <input id="silver" type="number"> <br/><br/>
+    Bronze: <input id="bronze" type="number"> <br/><br/>
+
+    <input type="button" value="Send JSON" onclick="sendJson()">
+    <input type="reset" value="Clear">
+
+    <h2>Server Response</h2>
+    <pre id="output"></pre>
+
+    <script>
+        function sendJson() {
+            const data = {
+                name: document.getElementById("name").value,
+                gold: Number(document.getElementById("gold").value || 0),
+                silver: Number(document.getElementById("silver").value || 0),
+                bronze: Number(document.getElementById("bronze").value || 0)
+            };
+
+            fetch("http://localhost:8000/test", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(json => {
+                document.getElementById("output").textContent =
+                    JSON.stringify(json, null, 2);
+            })
+            .catch(error => {
+                document.getElementById("output").textContent =
+                    "Error: " + error;
+            });
+        }
+    </script>
+</body>
+</html>

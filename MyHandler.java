@@ -42,7 +42,8 @@ public class MyHandler implements HttpHandler {
                 .replace("\"", "\\\"");
 
         String response = "{"
-                + "\"message\":\"JSON received successfully\","
+                + "\"message\":\"JSON received successfully, \"{\\\"name\\\":\\\"Japan\\\",\\\"gold\\\":27,\\\"silver\\\":14,\\\"bronze\\\":17,\\\"\r\n" + //
+                                        "total\\\":58}\"\","
                 + "\"method\":\"" + requestMethod + "\","
                 + "\"data\":\"" + safeBody + "\""
                 + "}";

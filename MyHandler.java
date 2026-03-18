@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -12,47 +10,27 @@ public class MyHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange he) throws IOException {
 
-        // CORS headers
-        Headers headers = he.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", "*");
-        headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        headers.set("Access-Control-Allow-Headers", "Content-Type");
+        // Handle CORS.
+        String origin = he.getRequestHeaders().getFirst("Origin");
 
-        // Handle browser preflight request
-        if ("OPTIONS".equalsIgnoreCase(he.getRequestMethod())) {
-            he.sendResponseHeaders(204, -1);
-            return;
+        if (origin == null) {
+            origin = "*";
         }
+        he.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
+        he.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        he.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
-        headers.set("Content-Type", "application/json; charset=utf-8");
+        // Set response headers.
+        Headers headers = he.getResponseHeaders();
+        headers.set("Content-Type", "text/plain");
         headers.set("Connection", "close");
 
-        String requestMethod = he.getRequestMethod();
-        String requestBody = "";
-
-        if ("POST".equalsIgnoreCase(requestMethod)) {
-            InputStream is = he.getRequestBody();
-            requestBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-        }
-
-        System.out.println("Received JSON: " + requestBody);
-
-        String safeBody = requestBody
-                .replace("\\", "\\\\")
-                .replace("\"", "\\\"");
-
-        String response = "{"
-                + "\"message\":\"JSON received successfully, \"{\\\"name\\\":\\\"Japan\\\",\\\"gold\\\":27,\\\"silver\\\":14,\\\"bronze\\\":17,\\\"\r\n" + //
-                                        "total\\\":58}\"\","
-                + "\"method\":\"" + requestMethod + "\","
-                + "\"data\":\"" + safeBody + "\""
-                + "}";
-
-        byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
-
-        he.sendResponseHeaders(200, responseBytes.length);
+        // Send response body.
+        String response = "This is the response";
+        System.out.println(response);
+        he.sendResponseHeaders(200, response.length());
         OutputStream os = he.getResponseBody();
-        os.write(responseBytes);
+        os.write(response.getBytes());
         os.close();
     }
 }

@@ -1,7 +1,12 @@
 # Compiled Java class files
 *.class
 
-# Build folders
+# Package files
+*.jar
+*.war
+*.ear
+
+# Build output directories
 /build/
 /out/
 /target/

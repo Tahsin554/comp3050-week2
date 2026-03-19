@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Simple!</title>
+    <title>Simple JSON!</title>
   </head>
   <body>
     <h1>Medals tally</h1>
@@ -9,17 +9,20 @@
     Gold:   <input id="gold"   type="text" length="5" /> <br/>
     Silver: <input id="silver" type="text" length="5" /> <br/>
     Bronze: <input id="bronze" type="text" length="5" /> <br/>
-    <input type="button" value="Send" onclick="fillName()" />
+    <input type="button" value="Send" onclick="fillMedals()" />
     <input type="reset" value="Clear" />
     </form>
   </body>
   <script>
-  function fillName() {
-    console.log("fillName called");
+  function fillMedals() {
+    console.log("fillMedals called");
     fetch('http://localhost:8000/test')
-      .then(response => response.text()) // or .json() if applicable
+      .then(response => response.json())
       .then(data => {
-        document.getElementById('name').value = data;
+        document.getElementById('name').value = data.name;
+        document.getElementById('gold').value = data.gold;
+        document.getElementById('silver').value = data.silver;
+        document.getElementById('bronze').value = data.bronze;
      })
      .catch(error => console.error('Error:', error));
   }

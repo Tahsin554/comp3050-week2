@@ -12,23 +12,21 @@ public class MyHandler implements HttpHandler {
 
         // Handle CORS.
         String origin = he.getRequestHeaders().getFirst("Origin");
-
-        if (origin == null) {
-            origin = "*";
+        if (origin != null) {
+            he.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
+            he.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            he.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
         }
-        he.getResponseHeaders().add("Access-Control-Allow-Origin", origin);
-        he.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        he.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
         // Set response headers.
         Headers headers = he.getResponseHeaders();
-        headers.set("Content-Type", "text/plain");
+        headers.set("Content-Type", "application/json");
         headers.set("Connection", "close");
 
-        // Send response body.
-        String response = "This is the response";
+        // Send JSON response body.
+        String response = "{\"name\":\"Australia\",\"gold\":18,\"silver\":19,\"bronze\":16}";
         System.out.println(response);
-        he.sendResponseHeaders(200, response.length());
+        he.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = he.getResponseBody();
         os.write(response.getBytes());
         os.close();

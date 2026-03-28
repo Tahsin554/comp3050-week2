@@ -24,7 +24,7 @@ public class MyHandler implements HttpHandler {
         headers.set("Connection", "close");
 
         // Send JSON response body.
-        String response = "{\"name\":\"Australia\",\"gold\":18,\"silver\":19,\"bronze\":16}";
+        String response = "{\"name\":\"Japan\",\"gold\":27,\"silver\":14,\"bronze\":17,\"total\":58}";
         System.out.println(response);
         he.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = he.getResponseBody();
